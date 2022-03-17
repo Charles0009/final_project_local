@@ -24,6 +24,7 @@ router.get('/', function(req, res, next) {
 /* GET data for last available measure */
 
 router.get('/:measure', function(req, res, next) {
+
   var measure = req.params.measure;
     var listParam = measure.split(",");
     var influx = createInflux();
@@ -60,28 +61,30 @@ router.get('/:measure/:date', function (req, res, next) {
   if (date.split(",").length > 1) {
       var datedate1 = new Date(date.split(",")[0]);
       var time1 = datedate1.getTime() * 1000000;
+      console.log(time1);
       var datedate2 = new Date(date.split(",")[1]);
       var time2 = datedate2.getTime() * 1000000;
-      influx.query('select * from ' + measure + ' where time> ' + time1 + ' and time<=' + time2).then(result => {
+      console.log(time2);
+      influx.query('select * from ' + measure + ' where time > ' + time1 + ' and time <=' + time2).then(result => {
           var a = [];
+          console.log(result.length);
           for (let i = 0; i < result.length; i++) {
               if (i % list_measure.length == 0) {
                   a.push({});
               }
-              //a[a.length - 1][result.groupRows[i % list_measure.length].name] = "test";
               if (result.groupRows[i% list_measure.length].name == 'gpsposition') {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length]% list_measure.length.lat, result[i% list_measure.length].lon, result[i% list_measure.length].alt];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].lat, result[i].lon, result[i].alt];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
               } else if (result.groupRows[i% list_measure.length].name == 'windvelocity') {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length].wind_avg, result[i% list_measure.length].wind_min, result[i% list_measure.length].wind_max];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].wind_avg, result[i].wind_min, result[i].wind_max];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
               } else {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length].value];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
-              }
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].value];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
+                }
           }
           res.send(JSON.stringify(a));
       }).catch(err => {
@@ -96,19 +99,18 @@ router.get('/:measure/:date', function (req, res, next) {
               if (i % list_measure.length == 0) {
                   a.push({});
               }
-              //a[a.length - 1][result.groupRows[i % list_measure.length].name] = "test";
               if (result.groupRows[i% list_measure.length].name == 'gpsposition') {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length]% list_measure.length.lat, result[i% list_measure.length].lon, result[i% list_measure.length].alt];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].lat, result[i].lon, result[i].alt];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
               } else if (result.groupRows[i% list_measure.length].name == 'windvelocity') {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length].wind_avg, result[i% list_measure.length].wind_min, result[i% list_measure.length].wind_max];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].wind_avg, result[i].wind_min, result[i].wind_max];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
               } else {
                   a[a.length - 1][result.groupRows[i% list_measure.length].name] = {};
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i% list_measure.length].value];
-                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i% list_measure.length].date;
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].value = [result[i].value];
+                  a[a.length - 1][result.groupRows[i% list_measure.length].name].date = result[i].date;
               }
           }
           res.send(JSON.stringify(a));
