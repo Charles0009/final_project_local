@@ -5,7 +5,7 @@
 This project display charts and data of a fakesonde API. 
 It can be connect to other sonde device by changing th API script. 
 
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Alt Text](dashboard.gif)
 
 
 ## Project setup
