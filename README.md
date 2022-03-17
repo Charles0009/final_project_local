@@ -3,6 +3,16 @@
 
 ###Git clone the project
 
+#### Prerequesites
+install influxdb
+create a database by entering the following line : 
+
+```bash
+influx
+SHOW  DATABASES
+CREATE DATABASE dbAllMeasurements
+```
+
 * To run the fakesonde to produce data, follow the following lines from the main directory.
 
 ```bash
@@ -22,4 +32,9 @@ node save_in_db.js
 ```bash
 cd app_API
 DEBUG=app_API:* npm start
+```
+* To access the data, follow the following pattern:
+
+```bash
+localhost:3000/data/name_of_measurements_needed/dates_start, date_end
 ```
